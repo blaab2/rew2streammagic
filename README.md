@@ -1,6 +1,6 @@
 # rew2streammagic
 
-rew2streammagic is a Python tool to parse Room EQ Wizard (REW) equalizer description files and apply the extracted equalizer settings to Cambridge Audio StreamMagic devices.
+rew2streammagic is a Python tool to parse Room EQ Wizard (REW) equalizer description files (Equalizer APO file format) and apply the extracted equalizer settings to Cambridge Audio StreamMagic devices.
 
 ## Features
 
