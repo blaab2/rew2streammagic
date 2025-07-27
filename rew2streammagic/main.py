@@ -6,6 +6,7 @@ and extracting the first seven equalizer band settings.
 import sys
 import re
 import asyncio
+import argparse
 from pathlib import Path
 from aiohttp import ClientSession
 from aiostreammagic import StreamMagicClient, EQBand, UserEQ, EQFilterType, Info
@@ -48,23 +49,34 @@ def parse_eq_file(file_path):
 
 
 async def main():
-    if len(sys.argv) < 2:
-        print("Usage: python -m rew2streammagic.main <path_to_eq_file>")
-        sys.exit(1)
-    eq_file = Path(sys.argv[1])
+    parser = argparse.ArgumentParser(
+        description="Parse REW equalizer file and apply settings to StreamMagic device"
+    )
+    parser.add_argument("eq_file", help="Path to REW equalizer file")
+    parser.add_argument(
+        "--ip",
+        default="192.168.1.29",
+        help="IP address of StreamMagic device (default: 192.168.1.29)"
+    )
+    
+    args = parser.parse_args()
+    
+    eq_file = Path(args.eq_file)
     if not eq_file.exists():
         print(f"File not found: {eq_file}")
         sys.exit(1)
+    
     user_eq = parse_eq_file(eq_file)
     if not user_eq.bands:
         print("No equalizer bands found in the file.")
         sys.exit(1)
+    
     print("First 7 Equalizer Bands:")
     for band in user_eq.bands:
         print(f"Band {band.index}: Freq={band.freq}Hz, Gain={band.gain}dB, Q={band.q}")
 
     async with ClientSession() as session:
-        client = StreamMagicClient("192.168.1.29", session=session)
+        client = StreamMagicClient(args.ip, session=session)
         await client.connect()
         info: Info = await client.get_info()
 
