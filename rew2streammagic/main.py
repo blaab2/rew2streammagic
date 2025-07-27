@@ -6,9 +6,31 @@ and extracting the first seven equalizer band settings.
 import sys
 import re
 import asyncio
+import ipaddress
 from pathlib import Path
 from aiostreammagic import StreamMagicClient, EQBand, UserEQ, EQFilterType, Info
 from packaging.version import Version
+
+
+def validate_ip_address(ip_str):
+    """
+    Validate that the provided string is a valid IP address.
+
+    Args:
+        ip_str (str): The IP address string to validate
+
+    Returns:
+        str: The validated IP address
+
+    Raises:
+        ValueError: If the IP address is invalid
+    """
+    try:
+        # This will validate both IPv4 and IPv6 addresses
+        validated_ip = ipaddress.ip_address(ip_str)
+        return str(validated_ip)
+    except ValueError as e:
+        raise ValueError(f"Invalid IP address '{ip_str}': {e}")
 
 
 def parse_eq_file(file_path):
@@ -47,13 +69,22 @@ def parse_eq_file(file_path):
 
 
 async def main():
-    if len(sys.argv) < 2:
-        print("Usage: python -m rew2streammagic.main <path_to_eq_file>")
+    if len(sys.argv) < 3:
+        print("Usage: python -m rew2streammagic.main <path_to_eq_file> <ip_address>")
         sys.exit(1)
+
     eq_file = Path(sys.argv[1])
     if not eq_file.exists():
         print(f"File not found: {eq_file}")
         sys.exit(1)
+
+    # Validate IP address
+    try:
+        ip_address = validate_ip_address(sys.argv[2])
+    except ValueError as e:
+        print(f"Error: {e}")
+        sys.exit(1)
+
     user_eq = parse_eq_file(eq_file)
     if not user_eq.bands:
         print("No equalizer bands found in the file.")
@@ -62,7 +93,8 @@ async def main():
     for band in user_eq.bands:
         print(f"Band {band.index}: Freq={band.freq}Hz, Gain={band.gain}dB, Q={band.q}")
 
-    async with StreamMagicClient("192.168.1.29") as client:
+    print(f"Connecting to StreamMagic device at {ip_address}...")
+    async with StreamMagicClient(ip_address) as client:
         await client.connect()
         info: Info = await client.get_info()
 
