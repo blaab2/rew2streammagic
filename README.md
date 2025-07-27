@@ -8,6 +8,21 @@ rew2streammagic is a Python tool to parse Room EQ Wizard (REW) equalizer descrip
 - Supports various filter types (PEAKING, LOWSHELF, HIGHSHELF, LOWPASS, HIGHPASS)
 - Maps REW filter types to StreamMagic-compatible types
 - Communicates with StreamMagic devices to set user EQ parameters
+- **Full IPv4 and IPv6 address support** for device connectivity
+
+## IP Address Support
+
+The tool supports both IPv4 and IPv6 addresses for connecting to StreamMagic devices:
+
+- **IPv4**: Standard dotted decimal notation (e.g., `192.168.1.29`, `10.0.0.100`)
+- **IPv6**: All standard IPv6 formats including:
+  - Compressed notation (e.g., `::1`, `2001:db8::1`)
+  - Full notation (e.g., `2001:0db8:85a3:0000:0000:8a2e:0370:7334`)
+  - Link-local addresses (e.g., `fe80::1234:5678:abcd:ef01`)
+  - IPv4-mapped IPv6 addresses (e.g., `::ffff:192.168.1.1`)
+  - Zone identifiers for link-local addresses (e.g., `fe80::1%eth0`)
+
+All IP addresses are validated before attempting connection to ensure proper format.
 
 ## Usage
 
@@ -31,8 +46,14 @@ rew2streammagic is a Python tool to parse Room EQ Wizard (REW) equalizer descrip
 
 See the `example_data/` folder for sample input files.
 
+For a comprehensive demonstration of IPv6 address support, run:
+```sh
+python3 examples/ipv6_demonstration.py
+```
+
 ### Usage Examples
 
+#### IPv4 Examples
 ```sh
 # Connect to a StreamMagic device at IP address 192.168.1.29
 poetry run python -m rew2streammagic.main example_data/default.txt 192.168.1.29
@@ -40,8 +61,29 @@ poetry run python -m rew2streammagic.main example_data/default.txt 192.168.1.29
 # Connect to a device at a different IP address
 poetry run python -m rew2streammagic.main example_data/peaking.txt 10.0.0.100
 
-# IPv6 addresses are also supported
-poetry run python -m rew2streammagic.main example_data/filter_types.txt ::1
+# Connect to a device on localhost
+poetry run python -m rew2streammagic.main example_data/filter_types.txt 127.0.0.1
+```
+
+#### IPv6 Examples
+```sh
+# IPv6 localhost (compressed notation)
+poetry run python -m rew2streammagic.main example_data/default.txt ::1
+
+# IPv6 link-local address
+poetry run python -m rew2streammagic.main example_data/peaking.txt fe80::1234:5678:abcd:ef01
+
+# IPv6 global unicast address (compressed notation)
+poetry run python -m rew2streammagic.main example_data/filter_types.txt 2001:db8::1
+
+# IPv6 full notation
+poetry run python -m rew2streammagic.main example_data/default.txt 2001:0db8:85a3:0000:0000:8a2e:0370:7334
+
+# IPv4-mapped IPv6 address
+poetry run python -m rew2streammagic.main example_data/peaking.txt ::ffff:192.168.1.1
+
+# IPv6 with zone identifier (for link-local addresses)
+poetry run python -m rew2streammagic.main example_data/filter_types.txt fe80::1%eth0
 ```
 
 ## Requirements

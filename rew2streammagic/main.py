@@ -71,6 +71,15 @@ def parse_eq_file(file_path):
 async def main():
     if len(sys.argv) < 3:
         print("Usage: python -m rew2streammagic.main <path_to_eq_file> <ip_address>")
+        print("")
+        print("Arguments:")
+        print("  path_to_eq_file  Path to the REW equalizer description file")
+        print("  ip_address       IPv4 or IPv6 address of the StreamMagic device")
+        print("")
+        print("Examples:")
+        print("  python -m rew2streammagic.main eq_file.txt 192.168.1.29")
+        print("  python -m rew2streammagic.main eq_file.txt ::1")
+        print("  python -m rew2streammagic.main eq_file.txt 2001:db8::1")
         sys.exit(1)
 
     eq_file = Path(sys.argv[1])
