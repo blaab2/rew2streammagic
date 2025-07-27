@@ -7,6 +7,7 @@ import sys
 import re
 import asyncio
 from pathlib import Path
+from aiohttp import ClientSession
 from aiostreammagic import StreamMagicClient, EQBand, UserEQ, EQFilterType, Info
 from packaging.version import Version
 
@@ -62,7 +63,8 @@ async def main():
     for band in user_eq.bands:
         print(f"Band {band.index}: Freq={band.freq}Hz, Gain={band.gain}dB, Q={band.q}")
 
-    async with StreamMagicClient("192.168.1.29") as client:
+    async with ClientSession() as session:
+        client = StreamMagicClient("192.168.1.29", session=session)
         await client.connect()
         info: Info = await client.get_info()
 

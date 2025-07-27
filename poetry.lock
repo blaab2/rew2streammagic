@@ -144,7 +144,7 @@ optional = false
 python-versions = "^3.11"
 groups = ["main"]
 files = []
-develop = true
+develop = false
 
 [package.dependencies]
 aiohttp = "^3.11.7"
@@ -154,8 +154,10 @@ packaging = "^25.0"
 yarl = ">=1.6.0"
 
 [package.source]
-type = "directory"
-url = "../aiostreammagic"
+type = "git"
+url = "https://github.com/Solmath/aiostreammagic.git"
+reference = "feature/add-eq-support"
+resolved_reference = "f603ce1de021e54f8d9dd70a152719207602d321"
 
 [[package]]
 name = "attrs"
@@ -1010,4 +1012,4 @@ propcache = ">=0.2.1"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.11,<4.0"
-content-hash = "6a7bc702848095e56e6a14c06fe0cac18a042aed4a35f415f0e42970716f29cd"
+content-hash = "5f2ecb490c71fdba43001e95ec40bb350e190f500765ce9bdd13b4f41dab9b61"
