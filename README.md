@@ -22,14 +22,27 @@ rew2streammagic is a Python tool to parse Room EQ Wizard (REW) equalizer descrip
 1. Run the tool:
 
     ```sh
-    poetry run python -m rew2streammagic.main <path_to_eq_file>
+    poetry run python -m rew2streammagic.main <path_to_eq_file> <ip_address>
     ```
 
-1. The tool will parse the file and send the EQ settings to your StreamMagic device, if it is supported by the API version.
+1. The tool will parse the file and send the EQ settings to your StreamMagic device at the specified IP address, if it is supported by the API version.
 
 ## Example
 
 See the `example_data/` folder for sample input files.
+
+### Usage Examples
+
+```sh
+# Connect to a StreamMagic device at IP address 192.168.1.29
+poetry run python -m rew2streammagic.main example_data/default.txt 192.168.1.29
+
+# Connect to a device at a different IP address
+poetry run python -m rew2streammagic.main example_data/peaking.txt 10.0.0.100
+
+# IPv6 addresses are also supported
+poetry run python -m rew2streammagic.main example_data/filter_types.txt ::1
+```
 
 ## Requirements
 
